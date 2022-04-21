@@ -6,6 +6,8 @@ import 'package:untitled1/bottomNavScreens/navTeams.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
+import 'package:untitled1/drawerChildren/leave.dart';
+import 'package:untitled1/drawerChildren/profile.dart';
 class mainState extends State
 {
   static var menuItemsList = ["","Attendance","Leave","Profile"];
@@ -32,7 +34,7 @@ class mainState extends State
               Container(),
               Container(height: MediaQuery.of(context).size.height,width: double.infinity,child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  return drawerListChild(index);
+                  return drawerListChild(index,context);
                 },itemCount: menuItemsList.length,))
             ],)),
         bottomNavigationBar: BottomNavigationBar(currentIndex: pageIndex,
@@ -64,7 +66,8 @@ class mainState extends State
 }
 class drawerListChild extends StatelessWidget
 {
-  drawerListChild(this.index, {Key? key}) : super(key: key);
+  BuildContext context;
+  drawerListChild(this.index,this.context, {Key? key}) : super(key: key);
   int index;
   @override
   Widget build(BuildContext context) {
@@ -82,13 +85,35 @@ class drawerListChild extends StatelessWidget
           ],))
         ],);
       default:
-        return Container(height: 60,width:double.infinity,child: Padding(padding: const EdgeInsets.only(left: 20),
+        return GestureDetector(onTap: drawerItemSelected,child:Container(height: 60,width:double.infinity,child: Padding(padding: const EdgeInsets.only(left: 20),
           child:Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
             SvgPicture.asset(mainState.menuAssets[index]),
             SizedBox(height: 30,width: 10,),
             Text(mainState.menuItemsList[index])
-          ],)),);
+          ],)),));
     };
+  }
+  drawerItemSelected()
+  {
+    late var route;
+    switch(this.index)
+    {
+      case 1:
+        break;
+      case 2:
+        route = MaterialPageRoute(builder: (BuildContext context)
+        {
+          return leave();
+        });
+        break;
+      case 3:
+        route = MaterialPageRoute(builder: (BuildContext context)
+        {
+          return profile();
+        });
+        break;
+    }
+    Navigator.push(context, route);
   }
 }
 

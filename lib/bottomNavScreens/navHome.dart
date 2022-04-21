@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slider_button/slider_button.dart';
 import 'package:untitled1/navHomeChildren/attendanceRequests.dart';
+import 'package:untitled1/navHomeChildren/leaveRequests.dart';
+import 'package:untitled1/navHomeChildren/requestAttendance.dart';
+import 'package:untitled1/navHomeChildren/viewMyRequests.dart';
 
 class navHome extends StatefulWidget
 {
@@ -54,7 +57,7 @@ class navHomeState extends State{
       ],)))),
 
       const SizedBox(height: 20,width: 10,),
-      Container(width: double.infinity,height: 100,child:Card(color: Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+      GestureDetector(onTap: leaveRequestOnTap,child:Container(width: double.infinity,height: 100,child:Card(color: Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
           child:Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
             Padding(padding:EdgeInsets.fromLTRB(10, 0, 20, 0),child:Container(height: 40,width: 40,decoration: BoxDecoration(shape: BoxShape.circle,color: Color(0xff5B88F4).withOpacity(0.19)),child:Center(child:Text("10",style:GoogleFonts.poppins(fontSize: 18,fontWeight: FontWeight.w500,color: Color(0xff2C56B9)))))),
             Column(mainAxisAlignment: MainAxisAlignment.center,children: [
@@ -64,14 +67,14 @@ class navHomeState extends State{
             ],),
             Spacer(),
             Padding(padding:const EdgeInsets.only(right: 20),child:Container(width: 20,height: 20,child:RotatedBox(quarterTurns: -1,child:SvgPicture.asset("assets/down.svg"))))
-          ],))),
+          ],)))),
 
       const SizedBox(height: 30,width: 10,),
 
       Row(children: [
         Text("My Requests",style:GoogleFonts.poppins(fontWeight: FontWeight.w600,fontSize: 16,color:Color(0xff484848))),
       const Spacer(),
-        Text("view all",style:GoogleFonts.poppins(color:Color(0xff2B55B7),fontWeight: FontWeight.w400,fontSize: 12))
+        GestureDetector(child:Text("view all",style:GoogleFonts.poppins(color:Color(0xff2B55B7),fontWeight: FontWeight.w400,fontSize: 12)),onTap: onMyRequestViewAllClicked,)
       ],),
 
       const SizedBox(height: 20,width: 10,),
@@ -90,7 +93,7 @@ class navHomeState extends State{
 
 
       Container(height:MediaQuery.of(context).size.height/5.6,width:double.infinity,child:ListView.separated(scrollDirection: Axis.horizontal,itemBuilder:(BuildContext context,int index){
-        return myRequestChildren(index);
+        return myRequestChildren(index,context);
       },separatorBuilder: (BuildContext context,int index){
         return SizedBox();
       }, itemCount: testrequests.length,))
@@ -108,6 +111,16 @@ class navHomeState extends State{
   {
 
   }
+
+  void onMyRequestViewAllClicked()
+  {
+    var route = MaterialPageRoute(builder:(BuildContext context)
+    {
+      return viewMyRequests();
+    });
+    Navigator.push(context, route);
+  }
+
   void attendanceRequestOnTap()
   {
     var route = MaterialPageRoute(builder: (BuildContext context) {
@@ -115,26 +128,38 @@ class navHomeState extends State{
     });
     Navigator.push(context, route);
   }
+  void leaveRequestOnTap()
+  {
+    var route = MaterialPageRoute(builder: (BuildContext context){
+      return leaveRequests();
+    });
+    Navigator.push(context, route);
+  }
 }
 class myRequestChildren extends StatelessWidget
 {
+  BuildContext con;
   int index = 0;
-  myRequestChildren(int i)
+  myRequestChildren(this.index,this.con);
+  void newCreateOnTap()
   {
-    this.index = i;
+    var route = MaterialPageRoute(builder: (BuildContext context){
+      return requestAttendance();
+    });
+    Navigator.push(con, route);
   }
   @override
   Widget build(BuildContext context) {
     switch(index)
     {
       case 0:
-        return Container(width:MediaQuery.of(context).size.width/3.7,height:MediaQuery.of(context).size.height/5.6,
+        return GestureDetector(child:Container(width:MediaQuery.of(context).size.width/3.7,height:MediaQuery.of(context).size.height/5.6,
             child:Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),color: const Color(0xff2C56B9),child:Padding(padding:EdgeInsets.all(10),
                 child:Column(mainAxisAlignment: MainAxisAlignment.center,children: [
                   Container(child:Icon(Icons.add,color: Colors.white,)),
                   SizedBox(),
                   Text("Create \n New",style:GoogleFonts.poppins(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white),textAlign: TextAlign.center,)
-                ],))));
+                ],)))),onTap: newCreateOnTap,);
       default:
         return  Container(width:MediaQuery.of(context).size.width/2,height:MediaQuery.of(context).size.height/5.6,child:Card(color: Colors.white,shape:RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
             child:Padding(padding:const EdgeInsets.only(left: 10),child:Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
